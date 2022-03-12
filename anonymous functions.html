@@ -1,4 +1,5 @@
 <h1>Anonymous Functions in 3 Languages</h1>
+
 <h2>What are anonymous functions?</h2>
 <p>
     An anonymous function does not have a specific name that identifies it. 
@@ -7,66 +8,60 @@
     pass a unique function as an argument, as you can write the code for 
     it right in the parameter list of the other function you're calling 
     instead of having to break up your code. They can also be used to briefly 
-    create a new scope.
+    create a new scope without having to put that code in a totally different 
+    place in your codebase.
 </p>
 <h2>How to make an anonymous functions in JavaScript</h2>
 <p>
     JavaScript syntax offers two ways to create an anonymous function:
-    <p>1: using the function keyword</p>
-    <code>
-        // creating a new scope by creating a function and calling it immediately
-        function() {
-            // whatever your function needs to do
-        }() 
+    <p>1: using the function keyword:</p>
+<code>// creating a new scope by creating a function and calling it immediately
+function() {
+    // whatever your function needs to do
+}() 
 
-        // Or, passed as a parameter:
-        setTimeout( function(){/* code to be run in 1500 seconds */}, 1500)
-    </code>
-    <p>2: using arrow functions</p>
-    <code>
-        () => { // function body }()
-    </code>
+// Or, passed as a parameter:
+setTimeout( function(){/* code to be run in 1500 seconds */}, 1500)
+</code>
+    <p>2: using arrow functions:</p>
+<code>() => { // function body }()
+</code>
     <p>Of course, these functions can accept parameters:</p>
-    <code>
-        let desiredItems = array.filter( 
-            (item) => { return item > 1}
-            )
-    </code>
+<code>let desiredItems = array.filter( 
+    (item) => { return item > 1}
+    )
+</code>
 </p>
 <h2>In C#</h2>
 <p>
     C# also allows for two methods for generating anonymous functions:
-    <p>1) using the delegate keyword</p>
-    <code>
-        List&lt;Item&gt; desiredItems = list.Where( 
-            delegate(Item item) { return item.Name.length > 0; }
-            );
-    </code>
+    <p>1) using the delegate keyword:</p>
+<code>List&lt;Item&gt; desiredItems = list.Where( 
+    delegate(Item item) { return item.Name.length > 0; }
+    );
+</code>
     <p>2) lambda expressions:</p>
-    <code>
-        List&lt Item &gt desiredItems = list.Where( 
-            item => item.Name.length > 0 // the lambda expression
-            );
-    </code>
-    </p>
+<code>List&lt;Item&gt; desiredItems = list.Where( 
+    item => item.Name.length > 0   // the lambda expression
+    );
+</code>
+</p>
 <h2>In Python</h2>
 <p>
-    Python has its own version of lambda expressions:
-    <code>
-        desired_items = list(map(
-            lambda x: len(x.name) > 0 ,
-            items_list))
-    </code>
-    These lambda functions can actually take any number of arguments:
-    <code>
-        argless_func = lambda : "Doesn't do much"
-        # argless_func() always just returns "Doesn't do much"
+    <p>Python has its own version of lambda expressions:</p>
+<code>desired_items = list(map(
+    lambda x: len(x.name) > 0 ,
+    items_list))
+</code>
+    <p>These lambda functions can actually take any number of arguments:</p>
+<code>argless_func = lambda : "Doesn't do much"
+# argless_func() always just returns "Doesn't do much"
 
-        three_arg_func = lambda a, b, c : a*b + c  
-        # three_arg_func(2,3,4) will return 10
-    </code>
+three_arg_func = lambda a, b, c : a*b + c  
+# three_arg_func(2,3,4) will return 10
+</code>
 </p>
-<p>
+<p style="margin-top: 2rem; font-size: 1.0625rem;">
     In summary, that's five ways across three programming 
     languages to write anonymous functions. See if you can 
     use them to make your code a little more awesome!
