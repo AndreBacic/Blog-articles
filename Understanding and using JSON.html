@@ -1,0 +1,49 @@
+<h1>Understanding JSON</h1>
+
+<h2>What Is JSON?</h2>
+<p>JavaScript Object Notation is a file format for storing and interchanging data 
+    that was designed to be lightweight, easy for both humans and computers to 
+    read, and be language independent. As its name suggests, JSON is derived from 
+    the JavaScript syntax for creating arrays and objects, but has not always been 
+    100% valid JavaScript due to some unicode character encoding differences.
+</p>
+<h2>How JSON Works</h2>
+<p>
+    JSON uses curly brackets { } to represent objects, and square brackets [] to 
+    represent arrays (lists of data). Either of these can be empty or contain any 
+    number data entries supported in JSON. Supported data types include numbers, 
+    strings (characters between double quotes ""), Boolean values (true or false), 
+    nested objects or arrays, or the value null.
+</p>
+<p>
+
+</p>
+<h2>Using JSON in JavaScript</h2>
+<p>You can create ad hoc data types in JavaScript with JSON syntax:</p>
+<code>
+    const bob = {
+        "name": "Bob",
+        "age": 43,
+        "allergies": [
+            "peanut oil",
+            "watermelon",
+            "bee stings"
+        ]
+        "address": {
+            "streetAddress": "111 11th Street",
+            "city": "Greenville",
+            "state": "NC",
+            "postalCode": "27858"
+        }
+        "is married": false,
+        "spouse": null
+    }
+
+    console.log(bob["allergies"][1])  // prints out 'watermelon'
+</code>
+<h2>Using JSON for App Configuration</h2>
+<p></p>
+
+<p style="margin-top: 2rem; font-size: 1.0625rem;">Summary</p>
+
+<!-- Tags: JavaScript -->
