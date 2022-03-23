@@ -1,89 +1,94 @@
 <h1>Understanding JSON</h1>
 
 <h2>What Is JSON?</h2>
-<p>JavaScript Object Notation is a file format for storing and interchanging data 
-    that was designed to be lightweight, easy for both humans and computers to 
-    read, and be language independent. As its name suggests, JSON is derived from 
+<p>
+    JavaScript Object Notation is a file format for storing and interchanging data. 
+    It was designed to be lightweight, easy for both humans and computers to 
+    read, and language independent. As its name suggests, JSON is derived from 
     the JavaScript syntax for creating arrays and objects, but has not always been 
     100% valid JavaScript due to some unicode character encoding differences.
 </p>
-<h2>How JSON Works</h2>
+
+<h2>How JSON Syntax Works</h2>
 <p>
-    JSON uses curly brackets { } to represent objects, and square brackets [] to 
+    JSON uses curly brackets { } to represent objects, and square brackets [ ] to 
     represent arrays (lists of data). Either of these can be empty or contain any 
     number data entries supported in JSON. Supported data types include numbers, 
-    strings (characters between double quotes ""), Boolean values (true or false), 
-    nested objects or arrays, or the value null.
+    strings (characters between double quotes "like this"), Boolean values (true 
+    or false), nested objects or arrays, or the value null.
 </p>
-<p>Arrays hold data values separated by commas, where data is accessed by its index 
+<p>
+    Arrays hold data values separated by commas, where data is accessed by its index 
     in the array. The first item has and index of 0, the next 1, and so on. In the 
-    following example, the value 25 exists at index 3 in the array:</p>
-<code>
-    [4, 9, 16, 25, 36, 49]
-</code>
-<p>Objects hold key:value pairs, so that the values can be referenced by their unique 
+    following example, the value 25 exists at index 3 in the array:
+</p>
+<code>[4, 9, 16, 25, 36, 49]</code>
+<p>
+    Objects hold key:value pairs, so that the values can be referenced by their unique 
     keys (while you don't have to make all keys unique, duplicate keys can lead to 
-    weird errors). Keys are always strings, but their values can be of any data type:</p>
-<code>
-    {
-        "title": "random data",
-        "number of values": 4,
-        "nested array": [
-            "You can mix value data types in arrays and objects",
-            true,
-            12
-        ],
-        "final key:value pair": null
-    }
+    weird errors). Keys are always strings, but their values can be of any data type:
+</p>
+<code>{
+    "title": "random data",
+    "number of values": 5,
+    "nested array": [
+        "You can mix value data types in arrays and objects",
+        true,
+        12
+    ],
+    "empty array": [],
+    "final value": null
+}
 </code>
-<p>Whitespace (spaces, tabs, and newlines) does not make a difference in the meaning 
+<p>
+    Whitespace (spaces, tabs, and newlines) does not make a difference in the meaning 
     of the data, but it is recommended to put spaces or newlines between values of 
     arrays and between the keys and values of objects. It is also recommended to use 
     consistent indentation (usually 2 or 4 spaces per level of nesting). Fortunately,
     code editors and IDEs automatically format the whitespace in JSON documents for us!
 </p>
+
 <h2>Using JSON in JavaScript</h2>
 <p>You can create ad hoc data types in JavaScript with JSON syntax:</p>
-<code>
-    const bob = {
-        "name": "Bob",
-        "age": 43,
-        "allergies": [
-            "peanut oil",
-            "watermelon",
-            "bee stings"
-        ]
-        "address": {
-            "streetAddress": "111 11th Street",
-            "city": "Greenville",
-            "state": "NC",
-            "postalCode": "27858"
-        }
+<code>const bob = {
+    "name": "Bob",
+    "age": 43,
+    "allergies": [
+        "peanut oil",
+        "watermelon",
+        "bee stings"
+    ]
+    "address": {
+        "streetAddress": "111 11th Street",
+        "city": "Greenville",
+        "state": "NC",
+        "ZIP Code": 27858
     }
+}
 
-    // In JavaScript square brackets are used to access object or array values
-    console.log(bob["allergies"][1])  // prints out 'watermelon'
+// In JavaScript square brackets are used to access object or array values
+console.log(bob["allergies"][1])  // prints out 'watermelon'
 </code>
+
 <h2>Using JSON for App Configuration</h2>
 <p>JSON is also widely used to store a program's configuration data. For example, 
     if you create a C# app with any recent version of .NET, it will have an 
     appsettings.json file. These configuration files have all information inside 
     one giant object, and use nested objects and arrays to group related information:
 </p>
-<code>
-    {
-        "ConnectionStrings": {
-            "SQL Database": "Server=.;Database=GoodDB;Trusted_Connection=True;"
-        },
-        "Logging": {
-            "LogLevel": {
-                "Default": "Information",
-                "Microsoft": "Warning",
-                "Microsoft.Hosting.Lifetime": "Information"
-            }
-        },        
-        "AllowedHosts": "*"
-    }
+<code>{
+    "ConnectionStrings": {
+        "SQL Database": "Server=.;Database=GoodDB;Trusted_Connection=True;"
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft": "Warning",
+            "Microsoft.Hosting.Lifetime": "Information"
+        }
+    },        
+    "AllowedHosts": "*"
+}
 </code>
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
