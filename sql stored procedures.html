@@ -1,19 +1,75 @@
 <h1>Stored Procedures in MS SQL Server</h1>
 
 <h2>What Are Stored Procedures?</h2>
-<p></p>
+<p>
+    Stored procedures are groups of SQL statements that are executed as a single unit. 
+    From the perspective of a developer who does not specialize in database management, 
+    stored procedures are the SQL equivalent of functions/methods. They can be called 
+    (AKA executed) with or without parameters, and can return values.
+</p>
+<p>
+    There are many benefits from using stored procedures, including:
+    - Efficiency: SQL Server caches the plan for executing a stored procedure 
+        after running it the first time, yielding a significant performance boost.
+    - Security: Not only can stored procedures be used to define user access limits,
+        but because input parameters are not treated as SQL statements, it is very 
+        difficult for hackers to make SQL injection attacks.
+    - Code reuse: Just as isolating code in other languages in functions lets it be called 
+        in many parts of an application, so can stored procedures be implemented to eliminate 
+        redundancy.
+    - Maintenance: By writing SQL code in stored procedures instead of in strings in 
+        an application's code, it cleanly separates the database-specific code from the 
+        rest of the application. This makes it easier and safer to test or change both 
+        the database and backend code.        
+</p>
 
 <h2>How to Create a Stored Procedure (With SQL Server Syntax)</h2>
-<p></p>
-<code></code>
-<p></p>
+<p>A procedure with no parameters:</p>
+<code>
+-- Create a stored procedure and give it a name
+CREATE PROCEDURE dbo.spExampleProcedure
+AS   -- The code before the AS is the stored procedure's header, and after the AS is the body, where  SQL statements are executed.
+BEGIN
+    -- Insert code here
+    -- Example:
+    SELECT * FROM dbo.MyTable;   -- SELECT statements will return data from the procedure, as will some other SQL statements.
+END
 
-<h2>Executing the New Stored Procedure</h2>
+-- By the way, a -- is SQL syntax for a comment.
+</code>
+<p>You can pass as many parameters to a stored procedure as you'd like:</p>
+<code>
+CREATE PROCEDURE dbo.spExampleProcedure
+(
+    -- Define each parameter by specifying its name and data type:
+    @param1 int,     -- Don't forget the @ before the name or to put commas between parameters
+    @param2 NVARCHAR(50),
+    @param3 DATETIME
+)
+AS
+BEGIN
+    -- Insert code here
+    -- Example:
+    INSERT into dbo.MyTable (param1, param2, param3);
+END
+</code>
+
+<h2>Running the New Stored Procedure</h2>
 <p></p>
 <code></code>
+
 <h2>How to Change an Existing Stored Procedure</h2>
-<p></p>
-<code></code>
+<p>Making changes to an existing stored procedure is simple:</p>
+<code>ALTER PROCEDURE dbo.spExampleProcedure
+    -- Write the new code for the stored procedure here
+</code>
+<p>
+    In SSMS (Microsoft SQL Server Management Studio), you can generate an alter 
+    procedure script with all of the existing procedure code already filled in 
+    by right-clicking the procedure and selecting "Modify":
+</p>
+<img src="https://andreblog.azurewebsites.net/images/SSMS_Modify_Procedure.png" 
+     alt="Showing how to generate the alter procedure script in SSMS" width="100%">
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
     In summary, you've learned what stored procedures are and how to 
