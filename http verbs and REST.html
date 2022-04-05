@@ -10,12 +10,27 @@
 </p>
 <h2>What Do HTTP Conversations Look Like?</h2>
 <p>
-    verb;headers;body
+    First, a client sends a request to a web server. The web server then processes 
+    the request and sends a response back to the client, completing the HTTP exchange.
 </p>
-<h2></h2>
+<p>
+    Both the request and the response contain important information in their <em>headers</em>, 
+    and often after the headers include a <em>body</em>. The request headers will tell the 
+    server if the client has any authentication credentials, what HTTP method (AKA <em>verb</em>) 
+    the client is using, metadata about the body (if one is sent), and other relevant data about 
+    the client. If a request includes a body, it is typically data that the client wishes the 
+    server to store in a database. 
+</p>
+<p>
+    The response headers will tell the client if the server was 
+    able to successfully process the request (specifically, by returning a 3-digit <em>status code</em>), 
+    details about the server and connection, and metadata about the response body. The body of a response 
+    is the information the client requested, often a web page.
+</p>
+<h2>HTTP Verbs and Status Codes</h2>
 <p></p>
-<h2></h2>
-<p></p>
+<h2>What Is REST?</h2>
+<p>Don't abuse HTTP verbs.</p>
 
 <!-- Don't forget a short summary -->
 
