@@ -1,0 +1,72 @@
+<h1>Hypertext Transfer Protocol</h1>
+
+<h2>What Is HTTP?</h2>
+<p>
+    <strong>H</strong>yper<strong>t</strong>ext <strong>T</strong>ransfer 
+    <strong>P</strong>rotocol (HTTP) is the underlying technology that allows web 
+    servers (like the ones Amazon and Google use to serve their websites) to respond 
+    to requests from web browsers (like you, with Chrome or Firefox or whichever 
+    browser you use). In other words, HTTP is the foundation for communication on the World Wide Web.
+</p>
+<h2>What Do HTTP Conversations Look Like?</h2>
+<p>
+    First, a client sends a request to a web server. The web server then processes 
+    the request and sends a response back to the client, completing the HTTP exchange.
+</p>
+<p>
+    Both the request and the response contain important information in their <em>headers</em>, 
+    and often after the headers include a <em>body</em>. The request headers will tell the 
+    server if the client has any authentication credentials, what HTTP method (AKA <em>verb</em>) 
+    the client is using, metadata about the body (if one is sent), and other relevant data about 
+    the client. If a request includes a body, it is typically data that the client wishes the 
+    server to store in a database. 
+</p>
+<p>
+    The response headers will tell the client if the server was able to successfully process 
+    the request (specifically, by returning a 3-digit <em>status code</em>), details about 
+    the server and connection, and metadata about the response body (). The body of a response 
+    is the information the client requested, often a web page.
+</p>
+<h2>HTTP Verbs and Status Codes</h2>
+<p>
+    In a request, the client uses HTTP verbs to ask a web server to perform specific actions.
+</p>
+<p style="text-indent: 0;">
+    The most common verbs are: 
+</p>
+<ul style="margin: 0; padding-left: 1rem;">
+    <li>GET : ask for data from the server.</li>
+    <li>POST : send data to the server for storage.</li>
+    <li>PUT : update data on the server.</li> 
+    <li>DELETE : permanently remove data from the server.</li>
+</ul>
+<p>
+    An HTTP response will always include a status code, which tells the client how the server 
+    processed the request. Status codes are grouped into five categories, with the first digit 
+    representing the category:
+</p>
+<ul style="margin: 0; padding-left: 1rem;">
+    <li>
+        <strong>1xx</strong> : informational messages, such as "Continue" or "Switching Protocols".
+    </li>
+    <li>
+        <strong>2xx</strong> : successful responses, such as "OK" or "Created".
+    </li>
+    <li>
+        <strong>3xx</strong> : redirections, such as "Moved Permanently" or "See Other".
+    </li>
+    <li>
+        <strong>4xx</strong> : client errors, such as "Bad Request" or "Unauthorized".
+    </li>
+    <li>
+        <strong>5xx</strong> : server errors, such as "Internal Server Error" or "Not Found".
+    </li>
+</ul>
+
+<p style="margin-top: 2rem; font-size: 1.0625rem;">
+    In summary, you have learned what Hypertext Transfer Protocol (HTTP) is and how 
+    clients and web servers use it to communicate. If you're developing web applications, 
+    see if you can use your new knowledge to make your part of the internet a better place!
+</p>
+
+<!-- Tags: HTTP -->
