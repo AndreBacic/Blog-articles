@@ -1,4 +1,4 @@
-<h1>Hypertext Transfer Protocol</h1>
+<h1>An Overview of Hypertext Transfer Protocol</h1>
 
 <h2>What Is HTTP?</h2>
 <p>
@@ -16,23 +16,24 @@
 <p>
     Both the request and the response contain important information in their <em>headers</em>, 
     and often after the headers include a <em>body</em>. The request headers will tell the 
-    server if the client has any authentication credentials, what HTTP method (AKA <em>verb</em>) 
-    the client is using, metadata about the body (if one is sent), and other relevant data about 
-    the client. If a request includes a body, it is typically data that the client wishes the 
-    server to store in a database. 
+    server if the client has any authentication credentials, the client is using, metadata about 
+    the body (if one is sent), and other relevant data about the client. If a request includes a 
+    body, it is typically data that the client wishes the server to store in a database. 
 </p>
 <p>
-    The response headers will tell the client if the server was able to successfully process 
-    the request (specifically, by returning a 3-digit <em>status code</em>), details about 
-    the server and connection, and metadata about the response body (). The body of a response 
-    is the information the client requested, often a web page.
+    The response headers will tell the client how the server processed
+    the request, details about the server and connection, and metadata about the response body 
+    (if one is sent). The body of a response is the information the client requested, often a web page.
 </p>
-<h2>HTTP Verbs and Status Codes</h2>
+<h2>HTTP Methods</h2>
 <p>
-    In a request, the client uses HTTP verbs to ask a web server to perform specific actions.
+    Let's now look at some specific HTTP information used in any request-response exchange.
 </p>
 <p style="text-indent: 0;">
-    The most common verbs are: 
+    Firstly, in a request, the client uses HTTP methods to ask a web server to perform specific actions.
+</p>
+<p style="text-indent: 0;">
+    The most common methods are: 
 </p>
 <ul style="margin: 0; padding-left: 1rem;">
     <li>GET : ask for data from the server.</li>
@@ -41,9 +42,15 @@
     <li>DELETE : permanently remove data from the server.</li>
 </ul>
 <p>
-    An HTTP response will always include a status code, which tells the client how the server 
-    processed the request. Status codes are grouped into five categories, with the first digit 
-    representing the category:
+    The HTTP methods are case-sensitive, so a client cannot send a 'get' request to a web server
+    and receive a successful response.
+</p>
+
+<h2>HTTP Status Codes</h2>
+<p>
+    When the server replies with an HTTP response, the response will always include a status 
+    code, which tells the client how the server processed the request. Status codes are grouped 
+    into five categories, with the first digit representing the category:
 </p>
 <ul style="margin: 0; padding-left: 1rem;">
     <li>
@@ -62,6 +69,53 @@
         <strong>5xx</strong> : server errors, such as "Internal Server Error" or "Not Found".
     </li>
 </ul>
+
+<h2>An Example HTTP Conversation</h2>
+<p>
+    To put all this together, let's look at the HTTP request from your browser to get this article 
+    and the HTTP response from the my blog's web server, first looking at the request:
+</p>
+<code>GET / HTTP/1.1
+
+Host: andreblog.azurewebsites.net/article.html
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.2 (KHTML, like Gecko) Chrome/6.0
+</code>
+<p>
+    After specifying the HTTP method and protocol version, the client sends in the headers 
+    the host name (url to the server and a specific webpage or API endpoint on it), connection 
+    type, and the user agent (the browser). 
+    The user agent shown here is actually Chrome, but it could be any browser. In POST or 
+    other such methods, the client sends the data in the body, which would follow below the 
+    headers. The headers would also include other metadata about the request, such as the 
+    content type of the body.
+</p>
+<p>
+    The server responds with:
+</p>
+<code>HTTP/1.1 200 OK
+
+Content-Type: text/html
+Content-Length: 1163
+Date: Wed, 06 Apr 2022 01:25:09 GMT
+Server: Kestrel
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+...and the rest of the response body, which in this case is the webpage you're looking at.
+</code>
+<p>
+    The server sends a 200 OK response, which means the request was successful and includes 
+    the response body. The response headers include the content type and length of the response 
+    body, the type of server that sent the information, and the time the response was sent (the 
+    example given is when I was writing this article, but the response your computer received 
+    had the present time in the Greenwich Mean Time time zone).
+</p>
+<p>
+    Once your browser received the response, the HTTP conversation was over and your browser turned to 
+    applying CSS styles and running some JavaScript code, but that's information for another article. 
+</p>
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
     In summary, you have learned what Hypertext Transfer Protocol (HTTP) is and how 
