@@ -16,7 +16,8 @@
 <p>
     Both the request and the response contain important information in their <em>headers</em>, 
     and often after the headers include a <em>body</em>. The request headers will tell the 
-    server if the client has any authentication credentials, the client is using, metadata about 
+    server if the client has any authentication credentials, and also includes metadata 
+    (information about information) about 
     the body (if one is sent), and other relevant data about the client. If a request includes a 
     body, it is typically data that the client wishes the server to store in a database. 
 </p>
@@ -73,7 +74,7 @@
 <h2>An Example HTTP Conversation</h2>
 <p>
     To put all this together, let's look at the HTTP request from your browser to get this article 
-    and the HTTP response from the my blog's web server, first looking at the request:
+    and the HTTP response from the my blog's web server; first looking at the request:
 </p>
 <code>GET / HTTP/1.1
 
