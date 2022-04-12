@@ -4,7 +4,7 @@
 <p>
     Responsive web design is coding a site's HTML and CSS to be user-friendly and look good on any device. 
     People today browse the web on screens from phones 3 inches (7.5cm) wide to desktop monitors spanning multiple 
-    feet (0.5 - 1m), and each size of screen demands a different layout. In this article we'll explore three 
+    feet (0.5 - 1m), and each screen size demands a different layout. In this article, we'll explore three 
     methods for writing CSS that will arrange your website to impress your users and improve their experience, 
     regardless of their chosen device.
 </p>
@@ -15,16 +15,17 @@
     the styles, and a meta tag to make measurements the same across all devices:
 </p>
 <code>&lt;head&gt;
-    &lt;link rel="stylesheet" href="css/style.css"&gt;</code>
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
     &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
 &lt;/head&gt;
 </code>
 <p>
     According to <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag">Mozilla</a>, 
-    devices with smaller screen widths by default render website pages first in a larger virtual viewport, and then 
+    devices with smaller screen widths render website pages by default first in a larger virtual viewport, and then 
     shrink the result to fit the screen (for example, a phone that is 360 pixels wide may render a webpage 
-    in a 720 pixel virtual viewport and then reduce the webpage to half the size). This means that responsive 
-    CSS that would otherwise rearrange content to fit the screen is ignored, because the CSS code thinks that 
+    in a 720 pixel virtual viewport and then reduce the webpage to half the size). This visibly results in tiny text, 
+    as you've likely seen accessing older websites on your phone. Behind the scenes, any responsive 
+    CSS, which would otherwise rearrange content to fit the screen, is ignored, because the CSS code thinks that 
     the screen is much wider than it really is. Adding the meta tag to the head of the HTML file tells the 
     device to render the page at the actual size of the screen, and thus CSS rules will apply as expected.
 </p>
@@ -37,18 +38,17 @@
     or containing element:
 </p>
 <ul>
-    <li>1<em>vw</em> equals 1% of the browser viewport's width</li>
-    <li>1<em>vh</em> equals 1% of the browser viewport's height</li>
-    <li>1<em>vmin</em> equals 1% of the smaller of the browser viewport's width and height</li>
-    <li>1<em>vmax</em> equals 1% of the larger of the browser viewport's width and height</li>
-    <li>1<em>%</em> equals 1% of the size of the parent element</li>
+    <li>1<strong>vw</strong> equals 1% of the browser viewport's width</li>
+    <li>1<strong>vh</strong> equals 1% of the browser viewport's height</li>
+    <li>1<strong>vmin</strong> equals 1% of the smaller of the browser viewport's width and height</li>
+    <li>1<strong>vmax</strong> equals 1% of the larger of the browser viewport's width and height</li>
+    <li>1<strong>%</strong> equals 1% of the size of the parent element</li>
 </ul>
 <p>
     For example, the following code styles a parent container to fill the whole viewport and child elements 
-    to each be a quarter of the parent's width:
+    each to be a quarter of the parent's width:
 </p>
-<code>/* CSS code */
-.parent {
+<code>.parent {
     width: 100vw;
     min-height: 100vh;
 }
@@ -70,15 +70,58 @@
     Please see <a href="https://www.w3schools.com/CSSref/css_units.asp">W3schools' CSS units reference</a>
     for more information about CSS units.
 </p>
+
 <h2>Media Queries</h2>
 <p>While responsive units help websites adjust to the browser window, often the page layout can't simply be shrunk 
     or stretched. Instead, the larger or smaller screens demand a totally different layout, but CSS rules defined in 
     media queries make this surprisingly easy.
 </p>
+<p>Let's assume we're adding to the responsive units example, and for mobile devices we want the child elements to 
+    span half the parent instead of 25%. We can do this by adding a media query:
+</p>
+<code>@media screen and (max-width: 540px) {
+    .child {
+        width: 50%;
+    }
+}
+</code>
+<p style="margin-bottom: 1px;">
+    The 'screen' after @media means that this media query applies to all devices with screens, and the 'max-width: 540px' 
+    means that the browser window's width must be no greater than 540 pixels to apply the media query. The 
+    websites you commonly use will have media queries for several different screen sizes, usually with a set of rules 
+    to apply to phones, another set for tablets, and another set for desktops, but you can add as many as you like.
+</p>
+<p style="margin-top: 0;">
+    You can also have a media query that specifies a 'min-width: value' instead, 
+    in which case the media query rules apply only to screens larger than the specified value.
+</p>
+
 <h2>Responsive CSS Functions</h2>
-<p></p>
+<p>
+    Useful as media queries are, the same task can sometimes be achieved with far less code by using some handy css 
+    functions:
+</p>
+<ul>
+    <li><strong>min(a, b, ...)</strong> applies the smallest value</li>
+    <li><strong>max(a, b, ...)</strong> applies the largest value</li>
+    <li><strong>clamp(min, val, max)</strong> applies val unless it departs from the min and max bounds</li>
+</ul>
+<p>In use:</p>
+<code>/* parent elements are by default half the viewport width, but may not be smaller than 15rem or larger than 50rem */
+.parent {
+    width: clamp(15rem, 50vw, 50rem);
+}
+
+/* child elements are 100% of the container's width, but don't get wider than 640px */
+.child {
+    width: min(100%, 640px);
+}
+</code>
+
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
     Now that you've learned three ways to make your website responsive, 
     see how you can use them to make your website more accessible and 
     more enjoyable for all users!
 </p>
+
+<!-- Tags: CSS -->
