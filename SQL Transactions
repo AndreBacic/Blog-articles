@@ -1,0 +1,60 @@
+<!-- TODO -->
+
+<h1>SQL Transactions</h1>
+
+<h2>What Are Transactions?</h2>
+<p>
+    A transaction is a group of SQL statements that are executed together. 
+    If one of the statements fails, the whole transaction is rolled back.
+</p>
+
+<h2>SQL Server Transaction Syntax</h2>
+<p>
+    The syntax for a transaction is:
+</p>
+<code>BEGIN TRANSACTION;
+
+    /*<em>SQL statements</em>*/
+
+COMMIT TRANSACTION;
+</code>
+<p>
+    For example, suppose a bank wants to move money from one account to another. 
+    Their SQL developers can write a transaction to successfully move the money without 
+    risk of data corruption:
+</p>
+<code>-- This code assumes parameters @Amount, @FromAccount, and @ToAccount are passed in.
+BEGIN TRANSACTION;
+
+    UPDATE Account
+    SET Balance = Balance - @Amount
+    WHERE AccountNumber = @FromAccountNumber;
+
+    UPDATE Account
+    SET Balance = Balance + @Amount
+    WHERE AccountNumber = @ToAccountNumber;
+
+COMMIT TRANSACTION;
+</code>
+
+<h2>Rolling Back a Transaction</h2>
+<p>
+    If one of the statements fails, the whole transaction is rolled back.
+    You can manually roll back a transaction if need be by using the ROLLBACK TRANSACTION statement:
+</p>
+<code>BEGIN TRANSACTION;
+
+    /*<em>SQL statements</em>*/
+
+    ROLLBACK TRANSACTION;
+
+    /*<em>SQL statements</em>*/
+
+COMMIT TRANSACTION;
+</code>
+
+<p style="margin-top: 2rem; font-size: 1.0625rem;">
+    In summary, 
+</p>
+
+<!-- Tags: SQL -->
