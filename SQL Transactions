@@ -1,27 +1,47 @@
-<!-- TODO -->
+<!-- TODO: Finish paragraphs -->
 
 <h1>SQL Transactions</h1>
 
 <h2>What Are Transactions?</h2>
 <p>
     A transaction is a group of SQL statements that are executed together. 
-    If one of the statements fails, the whole transaction is rolled back.
+    If one of the statements fails, the whole transaction is rolled back, 
+    and the database is in the state it was in before the transaction was started. 
+    If all statements succeed, the transaction is committed, and all of the SQL 
+    statements are executed against the database.
+</p>
+<p>
+    Transactions are essential in situations where having only the first statements succeed 
+    could corrupt the database. For example, if money is being transferred from 
+    one account to another, and the transfer fails mid-execution, the database 
+    could end up creating fake money or deleting someone's savings. Using a 
+    transaction ensures that either the money is properly transferred, or if 
+    the transfer fails, nothing is changed.
 </p>
 
 <h2>SQL Server Transaction Syntax</h2>
 <p>
-    The syntax for a transaction is:
+    The simplest way to write a transaction is:
 </p>
 <code>BEGIN TRANSACTION;
 
     /*<em>SQL statements</em>*/
 
-COMMIT TRANSACTION;
+COMMIT;
 </code>
 <p>
-    For example, suppose a bank wants to move money from one account to another. 
-    Their SQL developers can write a transaction to successfully move the money without 
-    risk of data corruption:
+    You can name a transaction to provide clarity, which 
+    is especially useful if you have nested transactions:
+</p>
+<code>BEGIN TRANSACTION transactionName;
+
+    /*<em>SQL statements</em>*/
+    
+COMMIT TRANSACTION transactionName;
+</code>
+<p>
+    Revisiting the bank example, the bank's SQL developers can write a transaction 
+    to successfully move the money from one account to another without risk of data corruption:
 </p>
 <code>-- This code assumes parameters @Amount, @FromAccount, and @ToAccount are passed in.
 BEGIN TRANSACTION;
@@ -40,21 +60,54 @@ COMMIT TRANSACTION;
 <h2>Rolling Back a Transaction</h2>
 <p>
     If one of the statements fails, the whole transaction is rolled back.
-    You can manually roll back a transaction if need be by using the ROLLBACK TRANSACTION statement:
+    You can manually roll back a transaction if need be by using the ROLLBACK statement:
 </p>
 <code>BEGIN TRANSACTION;
 
     /*<em>SQL statements</em>*/
 
-    ROLLBACK TRANSACTION;
+    -- Rollback if an error has occurred.
+    IF @@ERROR <> 0
+    BEGIN
+        ROLLBACK;
+    END;
 
     /*<em>SQL statements</em>*/
 
 COMMIT TRANSACTION;
 </code>
+<p>
+    You can roll back a named transaction, which is especially useful if you have nested transactions
+    (by default ROLLBACK rolls back to the outermost transaction):
+</p>
+<code>BEGIN TRANSACTION outerTransaction;
+
+    /*<em>SQL statements</em>*/
+
+    BEGIN TRANSACTION innerTransaction;
+
+        /*<em>SQL statements</em>*/
+
+        -- Rollback if an error has occurred.
+        IF @@ERROR &lt;&gt; 0
+        BEGIN
+            ROLLBACK TRANSACTION innerTransaction;
+        END;
+
+        /*<em>SQL statements</em>*/
+
+    COMMIT TRANSACTION innerTransaction;
+
+    /*<em>SQL statements</em>*/
+
+    /* Note that a ROLLBACK; here would roll back the inner transaction along with the outer transaction. */
+
+COMMIT TRANSACTION outerTransaction;
+</code>
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
-    In summary, 
+    In summary, you've learned how to write SQL transactions, and how to roll back a transaction if it fails. 
+    Perhaps you can improve your database by implementing transactions in your code.
 </p>
 
 <!-- Tags: SQL -->
