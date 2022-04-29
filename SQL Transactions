@@ -30,17 +30,22 @@ COMMIT;
     You can name a transaction to provide clarity, which 
     is especially useful if you have nested transactions:
 </p>
-<code>BEGIN TRANSACTION transactionName;
+<code>DECLARE @transactionName varchar(20) = 'MyTransaction';
+    
+BEGIN TRANSACTION @transactionName;
 
     /*<em>SQL statements</em>*/
     
-COMMIT TRANSACTION transactionName;
+COMMIT TRANSACTION @transactionName;
 </code>
 <p>
     Revisiting the bank example, the bank's SQL developers can write a transaction 
     to successfully move the money from one account to another without risk of data corruption:
 </p>
 <code>/* This code assumes parameters @Amount, @FromAccountNumber, and @ToAccountNumber have been passed in earlier in the program. */
+
+SET XACT_ABORT ON; /* Tells SQL Server to roll back the transaction if any of the statements fail. If XACT_ABORT is set to OFF, the transaction may have to be manually rolled back if an error happens. */
+
 BEGIN TRANSACTION;
 
     UPDATE Account
@@ -59,50 +64,54 @@ COMMIT TRANSACTION;
     You can manually roll back a transaction if need be by using the ROLLBACK statement:
 </p>
 <code>BEGIN TRANSACTION;
+BEGIN TRY
 
     /*<em>SQL statements</em>*/
-
-    -- Rollback if an error has occurred.
-    IF @@ERROR &lt;&gt; 0
-    BEGIN
+    
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    /* If an error occurs before the transaction is committed, the catch block rolls back the changes. */
+    IF @@TRANCOUNT > 0
         ROLLBACK;
-    END;
-
-    /*<em>SQL statements</em>*/
-
-COMMIT TRANSACTION;
+END CATCH
 </code>
 <p>
     You can roll back a specific transaction by name, which is especially useful if you have nested transactions
     (by default ROLLBACK rolls back to the outermost transaction):
 </p>
-<code>BEGIN TRANSACTION outerTransaction;
+<code>DECLARE @outerTransaction varchar(10) = 'outer';
+DECLARE @innerTransaction varchar(10) = 'inner';
+    
+BEGIN TRANSACTION @outerTransaction;
 
     /*<em>SQL statements</em>*/
 
-    BEGIN TRANSACTION innerTransaction;
+    BEGIN TRANSACTION @innerTransaction;
+    BEGIN TRY
 
         /*<em>SQL statements</em>*/
 
-        -- Rollback if an error has occurred.
-        IF @@ERROR &lt;&gt; 0
-        BEGIN
-            ROLLBACK TRANSACTION innerTransaction;
-        END;
-
-        /*<em>SQL statements</em>*/
-
-    COMMIT TRANSACTION innerTransaction;
+        COMMIT TRANSACTION @innerTransaction;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION @innerTransaction;
+    END CATCH    
 
     /*<em>SQL statements</em>*/
 
     /* Note that a ROLLBACK; here would roll back the inner transaction along with the outer transaction. */
 
-COMMIT TRANSACTION outerTransaction;
+COMMIT TRANSACTION @outerTransaction;
 </code>
-<p>
+<p style="margin-bottom: 4px;">
     Note that once a transaction is committed, it cannot be rolled back unless it is nested inside 
     another transaction. However, you must roll back the outer transaction to roll back the nested one.
+</p>
+<p>
+    Please see the <a href="https://docs.microsoft.com/en-us/sql/t-sql/language-elements/transactions-transact-sql?view=sql-server-ver15"
+    target="blank">Microsoft SQL Server transaction documentation</a> to learn more about SQL transactions, syntax, and database management.
 </p>
 
 <!-- TODO: Add information about savepoints here? -->
