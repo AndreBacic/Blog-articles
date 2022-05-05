@@ -1,6 +1,4 @@
-<!-- TODO: Finish paragraphs -->
-
-<h1>Making Web APIs in C#</h1>
+<h1>Making a Web App with a C# Web API</h1>
 
 <h2>What Is a Web API?</h2>
 <p>
@@ -10,9 +8,9 @@
     may be the front and back ends of a website, but can really run anywhere on the internet.
 </p>
 
-<h2>Why Use a Web API? Why Not MVC or Another Architecture?</h2>
+<h2>Why Use a Web API for a Web App? Why Not MVC or Another Architecture?</h2>
 <p>
-    There are many design patterns, each with their own pros and cons, but the 
+    There are many web app design patterns, each with their own pros and cons, but the 
     beauty of a Web API is that it cleanly separates the front and back ends of 
     a full-stack web app, such that either could easily be scrapped and replaced 
     with totally different software written in a different language without having 
@@ -24,19 +22,19 @@
     WinForms app or a Flutter project), or by all of the above at once.
 </p>
 
-<h2>How to Program a Web API in C#</h2>
+<h2>How to Create a Web API in C#</h2>
 <p>
     First, let's open Visual Studio, select Create a new Project and then find the ASP.NET Core Web API project template. If you're using 
     an older version of Visual Studio, you'll need to select the ASP.NET Core Web Application project template, 
     and then select the Web API project template after naming the project.
 </p>
-<img src="https://andreblog.azurewebsites.net/images/CreateNewWebAPI.png" alt="Selecting the C# Web API template">
+<img src="https://andreblog.azurewebsites.net/images/CreateNewWebAPI.png" alt="Selecting the C# Web API template"
+     style="width: 100%;">
 <p>
     Click 'Next' and give the new project a descriptive name (like FirstWebAPIProject) 
     and choose the folder where you want it to be. Click 'Next' and observe that VS 
     automatically selects the most recent version of .NET you have installed. Leave 
     all of the default values for this example and click 'Create' to generate the new project. 
-    If you'
 </p>
 <p style="margin-bottom: 1px;">
     Once the code generator has finished scaffolding out the new Web API project, observe 
@@ -68,48 +66,43 @@
     endpoint that returns a list of randomly filled out WeatherForecasts:
 </p>
 <code>[ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
+{
+    private static readonly string[] Summaries = new[]
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+};
 
-        private readonly ILogger&lt;WeatherForecastController&gt; _logger;
+    private readonly ILogger&lt;WeatherForecastController&gt; _logger;
 
-        public WeatherForecastController(ILogger&lt;WeatherForecastController&gt; logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public IEnumerable&lt;WeatherForecast&gt; Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+    public WeatherForecastController(ILogger&lt;WeatherForecastController&gt; logger)
+    {
+        _logger = logger;
     }
+
+    [HttpGet]
+    public IEnumerable&lt;WeatherForecast&gt; Get()
+    {
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
+    }
+}
 </code>
 
-<h2>How to Consume the C# Web API with JavaScript</h2>
-<!-- <p>
-    - Creating a wwwroot folder
-    - html page + a little CSS
-    - JavaScript fetch API
-    - Looking at the finished project
-</p> -->
+<h2>How to Add a Front End to the Project</h2>
 <p style="margin-bottom: 1px;">
-    If you run the template project, you'll notice that it opens the Swagger UI, which 
-    lets you call the API. However, the Swagger UI is not a production-ready front-end. 
-    Let's add a simple front-end to the project to call the API. We could use a JavaScript 
+    If you run the template project (and accept the self-signed SSL certificate IIS Express generates), 
+    you'll notice that it opens the Swagger UI, which lets you call the API. However, the Swagger UI 
+    is for development only, and thus the project has no deployable front end. 
+    Let's add a simple front end to the project to call the API. We could use a JavaScript 
     framework like React, Vue, or Angular and add a CSS framework like Bootstrap or TailwindCSS, 
-    but we'll use vanilla JavaScript and CSS for now.
+    but we'll just use vanilla JavaScript and CSS for this example.
 </p>
 <p>
     First, we'll create a folder called wwwroot in the project root (the wwwroot folder is used in
@@ -124,7 +117,7 @@
     &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;
     &lt;title&gt;Weather Forecast&lt;/title&gt;
     &lt;link rel="stylesheet" href="css/site.css"&gt;
-    &lt;script src="js/site.js defer"&gt;&lt;/script&gt;
+    &lt;script src="js/site.js" defer&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
     &lt;main id="main"&gt;
@@ -156,8 +149,9 @@ main {
 h1 {
     font-size: 3rem;
     font-weight: 400;
-    margin-top: 5rem;
+    margin-top: 0;
     margin-bottom: 1rem;
+    padding-top: 4rem;
 }
 h2 {
     font-size: 2rem;
@@ -165,33 +159,55 @@ h2 {
     margin-bottom: 1rem;
 }
 p {
-    padding: 0.5rem 0;
+    max-width: 40rem;
+    margin: 0 auto;
     border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0;
 }
 </code>
 <p>
-    Finally, create a js folder in the wwwroot folder and add the following JavaScript file to it:
+    Next, create a js folder in the wwwroot folder and add the following JavaScript file to it:
 </p>
-<code>let apiResponse = await fetch('/weatherForecast')
-let forecasts = await apiResponse.json()
+<code>async function renderForecastData() {
+    let apiResponse = await fetch('/weatherForecast')
+    let forecasts = await apiResponse.json()
 
-forecasts.forEach(forecast => {
-    let p = document.createElement('p')
-    p.innerText = `${forecast.dateFormatted} - ${forecast.temperatureC}C/${forecast.temperatureF}F - ${forecast.summary}`
-    document.getElementById('main').appendChild(p)
-})
+    forecasts.forEach(forecast => {
+        let p = document.createElement('p')
+        p.innerText = `${forecast.date} - ${forecast.temperatureF}°F/${forecast.temperatureC}°C - ${forecast.summary}`
+        document.getElementById('main').appendChild(p)
+    })
+}
+renderForecastData().then()
 </code>
 <p>
-    The JavaScript code uses the fetch API to call our C# weather forecast API and then uses the
+    The renderForecastData function uses the fetch API to call our C# weather forecast API and then uses the
     json method to parse the response. It then iterates through the forecasts and adds a paragraph 
-    to the main element for each forecast. If you run the project now, you'll see the following:
+    to the main element for each forecast. 
 </p>
-<img src="images/weatherForecastFinished.png" alt="Weather Forecast project, finished" />
+<p>
+    Before we can run the project, we have to tell the startup code to use our new front end. 
+    If you're using .NET 6.0 or later, you'll add the following lines to the Program.cs file, just after
+    the code for setting up SwaggerUI. In earlier versions of .NET Core, you'll need to add these lines 
+    to the Startup.cs file, in the Configure method:
+</p>
+<code>app.UseDefaultFiles();
+app.UseStaticFiles();
+</code>
+<p>
+    If you run the project now and change the url to localhost:44307 
+    (or whichever port the app url opens with), you'll see the following:
+</p>
+<img src="images/weatherForecastFinished.png" alt="Weather Forecast project, finished" 
+     style="width: 100%;"/>
 
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
-    In this tutorial, we learned what a C# web API is, how to create one, add a front-end to it, and consume the 
-    API with JavaScript. See if you can make your applications better by using a web API!
+    In this tutorial, you learned what a C# web API is, how to create one, and how to add a front end to it that consumes the 
+    web API with JavaScript. To learn more about C# web API's, please visit the 
+    <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-6.0" target="_blank">
+        C# .NET documentation</a>.
 </p>
 
-<!-- Tags: C#,JavaScript,HTTP -->
+<!-- Tags: C#,CSS,JavaScript,HTTP -->
