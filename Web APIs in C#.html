@@ -64,19 +64,36 @@
 }
 </code>
 <p>
-    In the WeatherForecastController we see a single RESTful API 
+    In the WeatherForecastController we see a single RESTful API controller with an
     endpoint that returns a list of randomly filled out WeatherForecasts:
 </p>
-<code>    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable&lt;WeatherForecast&gt; Get()
+<code>[ApiController]
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        private static readonly string[] Summaries = new[]
         {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
+
+        private readonly ILogger&lt;WeatherForecastController&gt; _logger;
+
+        public WeatherForecastController(ILogger&lt;WeatherForecastController&gt; logger)
+        {
+            _logger = logger;
+        }
+
+        [HttpGet]
+        public IEnumerable&lt;WeatherForecast&gt; Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
     }
 </code>
 
@@ -94,13 +111,87 @@
     framework like React, Vue, or Angular and add a CSS framework like Bootstrap or TailwindCSS, 
     but we'll use vanilla JavaScript and CSS for now.
 </p>
+<p>
+    First, we'll create a folder called wwwroot in the project root (the wwwroot folder is used in
+    C# web projects to contain front-end specific files). This is where we'll put our JavaScript and 
+    CSS files. We'll also create a file called index.html in this folder. Web browsers will look for 
+    index.html to load the page when we visit the site. Add the following code to the index.html file:
+</p>
+<code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"/&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;
+    &lt;title&gt;Weather Forecast&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/site.css"&gt;
+    &lt;script src="js/site.js defer"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;main id="main"&gt;
+        &lt;h1&gt;Weather Forecast&lt;/h1&gt;
+        &lt;h2&gt;Five-day Forecast:&lt;/h2&gt;
+        &lt;!-- JavaScript code will insert forecast data here --&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code>
+<p>
+    Next, create a folder named css in the wwwroot folder. This is where we'll 
+    add a new CSS file called site.css. Add the following code to the site.css file:
+</p>
+<code>*, *:before, *:after {
+    box-sizing: border-box;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Segoe UI", "Ubuntu", sans-serif;
+}
+main {
+    width: 100%;
+    min-height: 100%;
+    text-align: center;    
+}
+h1 {
+    font-size: 3rem;
+    font-weight: 400;
+    margin-top: 5rem;
+    margin-bottom: 1rem;
+}
+h2 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+p {
+    padding: 0.5rem 0;
+    border-top: 1px solid #ccc;
+}
+</code>
+<p>
+    Finally, create a js folder in the wwwroot folder and add the following JavaScript file to it:
+</p>
+<code>let apiResponse = await fetch('/weatherForecast')
+let forecasts = await apiResponse.json()
+
+forecasts.forEach(forecast => {
+    let p = document.createElement('p')
+    p.innerText = `${forecast.dateFormatted} - ${forecast.temperatureC}C/${forecast.temperatureF}F - ${forecast.summary}`
+    document.getElementById('main').appendChild(p)
+})
+</code>
+<p>
+    The JavaScript code uses the fetch API to call our C# weather forecast API and then uses the
+    json method to parse the response. It then iterates through the forecasts and adds a paragraph 
+    to the main element for each forecast. If you run the project now, you'll see the following:
+</p>
+<img src="images/weatherForecastFinished.png" alt="Weather Forecast project, finished" />
 
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
-    <!-- Summary
-    - what and why Web API
-    - C# web API
-    - using the C# web API with JavaScript -->
+    In this tutorial, we learned what a C# web API is, how to create one, add a front-end to it, and consume the 
+    API with JavaScript. See if you can make your applications better by using a web API!
 </p>
 
 <!-- Tags: C#,JavaScript,HTTP -->
