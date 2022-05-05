@@ -26,48 +26,81 @@
 
 <h2>How to Program a Web API in C#</h2>
 <p>
-    - Visual Studio template
-    - Analyzing the template web API
-    - Changing the template
+    First, let's open Visual Studio, select Create a new Project and then find the ASP.NET Core Web API project template. If you're using 
+    an older version of Visual Studio, you'll need to select the ASP.NET Core Web Application project template, 
+    and then select the Web API project template after naming the project.
 </p>
-<p>
-    First, let's open Visual Studio (I'm using VS 2019 but the steps are very similar for other recent versions).
-    Select Create a new Project and then find the ASP.NET Core Web API project template.
-</p>
-<img src="https://andreblog.azurewebsites.net/images/CreateNewWebAPI" alt="Selecting the C# Web API template">
+<img src="https://andreblog.azurewebsites.net/images/CreateNewWebAPI.png" alt="Selecting the C# Web API template">
 <p>
     Click 'Next' and give the new project a descriptive name (like FirstWebAPIProject) 
     and choose the folder where you want it to be. Click 'Next' and observe that VS 
     automatically selects the most recent version of .NET you have installed. Leave 
-    all of the default values for this example and click 'Create' to generate the new project.
+    all of the default values for this example and click 'Create' to generate the new project. 
+    If you'
 </p>
-<p>
+<p style="margin-bottom: 1px;">
     Once the code generator has finished scaffolding out the new Web API project, observe 
-    in the Solution Explorer tab the codebase structure. Program.cs is just boilerplate code 
-    for starting and running all of the other code. Startup.cs contains the code for configuring
-    the API, and is where you would write code to define authentication and authorization 
+    in the Solution Explorer tab the codebase structure. The Program.cs file contains the 
+    code for running the Web API. If you're using .NET 5.0 or an earlier .NET Core version, 
+    the code for configuring startup the API is found in the Startup.cs file. This is where 
+    you would write code to define authentication and authorization 
     policies or add different services to dependency injection. The appsettings.json file 
     stores additional configuration data.
 </p>
 <p>
     The more interesting code is in the WeatherForecast.cs and Controllers/WeatherForecastController.cs 
     files. The WeatherForecast data model expectedly has a few properties for storing data about what 
-    the weather was at a specific time. In the WeatherForecastController we see a single RESTful API 
-    endpoint that returns a list of randomly filled out WeatherForecasts.
+    the weather was at a specific time:    
 </p>
+<code>public class WeatherForecast
+{
+    public DateTime Date { get; set; }
+
+    public int TemperatureC { get; set; }
+
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+    public string Summary { get; set; }
+}
+</code>
+<p>
+    In the WeatherForecastController we see a single RESTful API 
+    endpoint that returns a list of randomly filled out WeatherForecasts:
+</p>
+<code>    [HttpGet(Name = "GetWeatherForecast")]
+    public IEnumerable&lt;WeatherForecast&gt; Get()
+    {
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
+    }
+</code>
 
 <h2>How to Consume the C# Web API with JavaScript</h2>
-<p>
+<!-- <p>
     - Creating a wwwroot folder
     - html page + a little CSS
     - JavaScript fetch API
     - Looking at the finished project
+</p> -->
+<p style="margin-bottom: 1px;">
+    If you run the template project, you'll notice that it opens the Swagger UI, which 
+    lets you call the API. However, the Swagger UI is not a production-ready front-end. 
+    Let's add a simple front-end to the project to call the API. We could use a JavaScript 
+    framework like React, Vue, or Angular and add a CSS framework like Bootstrap or TailwindCSS, 
+    but we'll use vanilla JavaScript and CSS for now.
 </p>
+
+
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
-    Summary
+    <!-- Summary
     - what and why Web API
     - C# web API
-    - using the C# web API with JavaScript
+    - using the C# web API with JavaScript -->
 </p>
 
 <!-- Tags: C#,JavaScript,HTTP -->
