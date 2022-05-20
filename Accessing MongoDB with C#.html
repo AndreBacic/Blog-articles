@@ -29,12 +29,31 @@
     library for accessing MongoDB. The MongoDB.Driver package provides all the functionality 
     necessary to develop awesome apps with MongoDB.
 </p>
+
 <h2>What drawbacks come from using a document-oriented database?</h2>
+<p style="margin-bottom: 1px;">
+    While MongoDB does support simple links between collections, it does not support joins. 
+    If your software involves graphs of relationships between objects (like an issue tracker
+    where many organizations have many workers who collaborate on many projects, each of which
+    has many workers and perhaps many sub-projects with many more workers), a document-oriented 
+    database will not be able to support the complexity of the graph. MongoDB shines in situations 
+    where the graph of a stored data structure doesn't have any cycles, like a tree or linked list. 
+</p>
+<p>
+    Also, because an entire document must be updated to change a value, applications 
+    that have a high update rate, but do not need maximum read performance, may be better served 
+    by a different paradigm of database design.
+</p>
+
+<h2>Setting up a C# project with MongoDB</h2>
 <p></p>
-<h2></h2>
+
+<h2>Running MongoDB queries with C#</h2>
 <p></p>
-<h2></h2>
-<p></p>
+
+<p style="margin-top: 2rem; font-size: 1.0625rem;">
+    In summary, 
+</p>
 
 
 
