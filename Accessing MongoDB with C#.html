@@ -1,0 +1,41 @@
+<h1>Accessing MongoDB with C#</h1>
+
+<h2>Why use MongoDB with C#?</h2>
+<p style="margin-bottom: 1px;">
+    MongoDB is a database designed to help apps read humongous amounts of data at top speed. 
+    Unlike relational (SQL) databases, MongoDB is a document-oriented database, meaning that 
+    all data is stored as JSON-style key-value pairs (where the values can be nested documents
+    or arrays of nested documents). Because complex data structures can be stored 
+    as single documents, MongoDB doesn't have to perform any joins when reading data and can 
+    provide a much faster query response time.
+</p>
+<p style="margin-bottom: 1px;">
+    Additionally, the documents in MongoDB collections (MongoDB has collections instead of tables) 
+    do not have to follow a rigidly-defined schema, so the data structures stored in MongoDB 
+    collections can be easily changed without the need for database migrations. In fact, documents 
+    in MongoDB collections can be store totally different data, if need be.
+</p>
+<p style="margin-bottom: 1px;">
+    When your in-production app needs to scale for the increasing number of users, MongoDB makes 
+    it easy to scale horizontally with a technique called sharding. While sharding is possible 
+    with SQL databases (using entity-based sharding), the fact that data structures are spread out 
+    across many tables makes it a very complicated endeavor. Thus, SQL databases are usually scaled
+    vertically, with a single server being upgraded to a better CPU and more RAM. But with document-oriented databases, 
+    few if any links between collections exist, which makes splitting the database into several shards,
+    one on each cheaper server, a much simpler task.
+</p>
+<p>
+    Even though C# is known for great integrations with SQL databases, it has an excellent 
+    library for accessing MongoDB. The MongoDB.Driver package provides all the functionality 
+    necessary to develop awesome apps with MongoDB.
+</p>
+<h2>What drawbacks come from using a document-oriented database?</h2>
+<p></p>
+<h2></h2>
+<p></p>
+<h2></h2>
+<p></p>
+
+
+
+<!-- Tags: C#,MongoDB -->
