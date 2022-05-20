@@ -1,6 +1,6 @@
-<h1>Accessing MongoDB with C#</h1>
+<h1>Accessing MongoDB With C#</h1>
 
-<h2>Why use MongoDB with C#?</h2>
+<h2>Why Use MongoDB With C#?</h2>
 <p style="margin-bottom: 1px;">
     MongoDB is a database designed to help apps read humongous amounts of data at top speed. 
     Unlike relational (SQL) databases, MongoDB is a document-oriented database, meaning that 
@@ -32,29 +32,34 @@
 
 <h2>What drawbacks come from using a document-oriented database?</h2>
 <p style="margin-bottom: 1px;">
-    While MongoDB does support simple links between collections, it does not support joins. 
-    If your software involves graphs of relationships between objects (like an issue tracker
+    While MongoDB <a href="">supports joins,</a> it is not best suited for software that involves complicated 
+    graphs of relationships between objects (like an issue tracker
     where many organizations have many workers who collaborate on many projects, each of which
-    has many workers and perhaps many sub-projects with many more workers), a document-oriented 
-    database will not be able to support the complexity of the graph. MongoDB shines in situations 
+    has many workers and perhaps many sub-projects with many more workers). MongoDB shines in situations 
     where the graph of a stored data structure doesn't have any cycles, like a tree or linked list. 
 </p>
 <p>
-    Also, because an entire document must be updated to change a value, applications 
-    that have a high update rate, but do not need maximum read performance, may be better served 
-    by a different paradigm of database design.
+    Also, because updating data often requires changing deeply nested data, applications 
+    that have a high update rate, but do not need maximum read performance, may achieve better
+    performance with a different paradigm of database design.
 </p>
 
-<h2>Setting up a C# project with MongoDB</h2>
-<p></p>
+<h2>Setting Up a C# Project With MongoDB</h2>
+<p>
 
-<h2>Running MongoDB queries with C#</h2>
-<p></p>
+</p>
+<!-- TODO: Add picture of C# project -->
+
+<h2>Running MongoDB Queries with C#</h2>
+<p>
+
+</p>
+<!-- TODO: Add picture of MongoDB compass screenshot? -->
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
-    In summary, 
+    In this article, you've learned the advantages and drawbacks of using MongoDB for your 
+    data storage needs, and how to implement MongoDB in a C# application. For your next project, 
+    perhaps your new knowledge will help make your software run at peak performance!
 </p>
-
-
 
 <!-- Tags: C#,MongoDB -->
