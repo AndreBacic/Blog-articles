@@ -4,7 +4,7 @@
 <p style="margin-bottom: 1px;">
     MongoDB is a database designed to help apps read humongous amounts of data at top speed. 
     Unlike relational (SQL) databases, MongoDB is a document-oriented database, meaning that 
-    all data is stored as JSON-style key-value pairs (where the values can be nested documents
+    all data is stored as BSON (Binary JSON) key-value pairs (where the values can be nested documents
     or arrays of nested documents). Because complex data structures can be stored 
     as single documents, MongoDB doesn't have to perform any joins when reading data and can 
     provide a much faster query response time.
@@ -32,11 +32,11 @@
 
 <h2>What drawbacks come from using a document-oriented database?</h2>
 <p style="margin-bottom: 1px;">
-    While MongoDB <a href="">supports joins,</a> it is not best suited for software that involves complicated 
-    graphs of relationships between objects (like an issue tracker
-    where many organizations have many workers who collaborate on many projects, each of which
-    has many workers and perhaps many sub-projects with many more workers). MongoDB shines in situations 
-    where the graph of a stored data structure doesn't have any cycles, like a tree or linked list. 
+    While <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/">MongoDB supports joins,</a> 
+    it is not best suited for software that involves complicated graphs of relationships between objects 
+    (like an issue tracker where many organizations have many workers who collaborate on many projects, 
+    each of which has many workers and perhaps many sub-projects with many more workers). MongoDB shines 
+    in situations where the graph of a stored data structure doesn't have any cycles, like a tree or linked list. 
 </p>
 <p>
     Also, because updating data often requires changing deeply nested data, applications 
@@ -46,15 +46,144 @@
 
 <h2>Setting Up a C# Project With MongoDB</h2>
 <p>
-
+    To demonstrate adding MongoDB to a C# project, we'll update the C# web API from the 
+    <a href="https://andreblog.azurewebsites.net/article.html?7">Making a Web App with a C# Web API</a> 
+    article. In the previous article, we created a C# web API that could generate random weather 
+    data and display it to a user, but it couldn't store the data permanently in a database. Once 
+    we add MongoDB to the app, the weather reports served to the front end will come from permanent 
+    records and not be randomly generated.
 </p>
-<!-- TODO: Add picture of C# project -->
+<p>
+    After either setting up an account with MongoDB Atlas or installing MongoDB locally (I'm using 
+    MongoDB locally), we'll create a new database with an initial collection named "Weather Forecasts" 
+    (all MongoDB databases are required to have at least one collection):
+</p>
+<!-- TODO: Actually add the image to the Blog repos -->
+<img src="https://andreblog.azurewebsites.net/images/NewMongoDatabase.png" alt="Creating a new MongoDB database with MongoDB Compass"
+    style="margin: 0 auto 1rem; width: min(100%, 36rem);">
+<p>
+    Next, in Visual Studio, right click on the project's Dependencies folder and select Manage 
+    NuGet Packages. In the NuGet Manager, browse for the MongoDB.Driver package and click Install. 
+    Now that this package is added to the project, we can create a new folder named 'DataAccess' 
+    and add a new class for data access called MongoDBAccessor to it:
+</p>
+<code>using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace WebAPIDemoForArticle.DataAccess
+{
+    public class MongoDBAccessor {
+
+        /// &lt;summary&gt;
+        /// The link to the MongoDB database
+        /// &lt;/summary&gt;
+        private readonly IMongoDatabase _database;
+        private const string _forecastCollection = "Weather Forecasts";
+        
+        public MongoDBAccessor(IConfiguration configuration)
+        {
+            MongoClient client = new MongoClient();
+            string database = configuration.GetConnectionString("MongoDB");
+            _database = client.GetDatabase(database);
+        }
+        
+        /// &lt;summary&gt;
+        /// Runs a query to get all the binary JSON (BSON) documents in the "Weather Forecasts" collection,
+        /// using MongoDB's Find() method.
+        /// &lt;/summary&gt;
+        public List&lt;WeatherForecast&gt; GetForecastsAsync() {
+            IMongoCollection&lt;WeatherForecast&gt; collection = _database.GetCollection&lt;WeatherForecast&gt;(_forecastCollection);
+            return collection.Find(new BsonDocument()).ToList();
+        }
+    }
+}
+</code>
+<p>
+    You'll notice that the constructor of the MongoDBAccessor class takes an IConfiguration object, 
+    which is a type that represents the application's configuration settings and will be passed in 
+    by the ASP.NET Core dependency injection system. However, the configuration does not currently 
+    contain any connection strings for MongoDB. To add a connection string, you'll need to add a 
+    connection string to the appsettings.json file (because I'm using a local MongoDB instance,
+    the connection string is simply the name of the database):
+</p>
+<code>  "ConnectionStrings": {
+    "MongoDB": "DemoDB"
+  },
+</code>
+<p>
+    Speaking of dependency injection, we'll need to add a new dependency to the project's 
+    startup code. In .NET 6.0 or later, you can add a new Singleton dependency in the Program.cs file:
+</p>
+<code>builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+<strong>builder.Services.AddSingleton&lt;MongoDBAccessor&gt;();</strong>
+</code>
+<p>
+    In .NET 5.0 or earlier, you'll need to add a new Singleton in the Startup.cs file, at  
+    the end of Startup.ConfigureServices():
+</p>
+<code>public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers();
+    services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIDemoForArticle", Version = "v1" });
+    });
+    <strong>builder.Services.AddSingleton&lt;MongoDBAccessor&gt;();</strong>
+}
+</code>
+<p>
+    The last step before changing the API controller to use the MongoDB accessor is to update the 
+    WeatherForecast class to be properly serialized and deserialized to and from BSON. Firstly, the 
+    class needs a Guid Id property that MongoDB will use as the unique identifier for each document. Next, the 
+    WeatherForecast class has a property called TemperatureF that simply converts the TemperatureC 
+    property to Fahrenheit. The TemperatureF property can be marked to be ignored when serializing
+    by adding the [BsonIgnore] attribute to the property:
+</p>
+<code><strong>using MongoDB.Bson.Serialization.Attributes;</strong>
+using System;
+
+namespace WebAPIDemoForArticle
+{
+    public class WeatherForecast
+    {
+        <strong>[BsonId]</strong>
+        <strong>public Guid Id { get; set; }</strong>
+
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+        
+        <strong>[BsonIgnore]</strong>
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public string Summary { get; set; }
+    }
+}
+</code>
+    
 <h2>Running MongoDB Queries with C#</h2>
 <p>
-
+    - Create a MongoDB collection
+    - Insert data into the collection
+    - Read data and display to webpage
 </p>
-<!-- TODO: Add picture of MongoDB compass screenshot? -->
+
+<h2>Updating the App to Let Users Add Weather Forecasts to The System</h2>
+<p>
+    - Problem: there are no forecasts in the database
+    - Solution: add a new page to the app that displays a form for users to add a new forecast
+    - Add page to front end
+    - Add POST endpoint to API
+    - Add CreateForecast method to MongoDBAccessor
+    - Run the app
+</p>
+<!-- TODO: Add picture of C# project -->
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
     In this article, you've learned the advantages and drawbacks of using MongoDB for your 
