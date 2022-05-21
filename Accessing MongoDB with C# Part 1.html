@@ -1,4 +1,4 @@
-<h1>Accessing MongoDB With C#</h1>
+<h1>Accessing MongoDB With C# Part 1: Introduction and Configuration</h1>
 
 <h2>Why Use MongoDB With C#?</h2>
 <p style="margin-bottom: 1px;">
@@ -94,7 +94,7 @@ namespace WebAPIDemoForArticle.DataAccess
         /// Runs a query to get all the binary JSON (BSON) documents in the "Weather Forecasts" collection,
         /// using MongoDB's Find() method.
         /// &lt;/summary&gt;
-        public List&lt;WeatherForecast&gt; GetForecastsAsync() {
+        public List&lt;WeatherForecast&gt; GetForecasts() {
             IMongoCollection&lt;WeatherForecast&gt; collection = _database.GetCollection&lt;WeatherForecast&gt;(_forecastCollection);
             return collection.Find(new BsonDocument()).ToList();
         }
@@ -169,26 +169,53 @@ namespace WebAPIDemoForArticle
     
 <h2>Running MongoDB Queries with C#</h2>
 <p>
-    - Create a MongoDB collection
-    - Insert data into the collection
-    - Read data and display to webpage
+    Finally, we can update the API controller to use the MongoDBAccessor class to query forecasts 
+    from the database instead of making them up on the fly. We'll need to add a dependency to the 
+    controller's constructor and edit the controller's Get() method to use the MongoDBAccessor:
 </p>
+<code>using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using WebAPIDemoForArticle.DataAccess;
 
-<h2>Updating the App to Let Users Add Weather Forecasts to The System</h2>
+namespace WebAPIDemoForArticle.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
+    {
+        private readonly MongoDBAccessor _accessor;
+
+        public WeatherForecastController(MongoDBAccessor accessor)
+        {
+            _accessor = accessor;
+        }
+
+        [HttpGet]
+        public IEnumerable&lt;WeatherForecast&gt; Get()
+        {
+            return _accessor.GetForecasts();
+        }
+    }
+}
+</code>
 <p>
-    - Problem: there are no forecasts in the database
-    - Solution: add a new page to the app that displays a form for users to add a new forecast
-    - Add page to front end
-    - Add POST endpoint to API
-    - Add CreateForecast method to MongoDBAccessor
-    - Run the app
+    To make the app not open the Swagger UI by default when running in development mode, we'll need to 
+    edit the launch properties. The easiest way is to right click on the project's Properties folder 
+    and click 'open.' Navigate to the Debug tab a find the Launch Browser option. Leave the box checked, 
+    but clear the text input, that by default is set to 'swagger.'
 </p>
-<!-- TODO: Add picture of C# project -->
-
-<p style="margin-top: 2rem; font-size: 1.0625rem;">
-    In this article, you've learned the advantages and drawbacks of using MongoDB for your 
-    data storage needs, and how to implement MongoDB in a C# application. For your next project, 
-    perhaps your new knowledge will help make your software run at peak performance!
+<p>
+    If you run the app now, the index.html page from the wwwroot folder will be opened in your browser as 
+    expected, but you may be surprised to not see any data in the table. This is because the database is 
+    empty. There are several options for populating the database, including manually inserting data via 
+    the Mongo shell or creating a DatabaseSeeder class that adds data to the database only if none already exists, 
+    but the best option is to add a new page to the project that lets users add new forecasts to the database. 
+    However, since this article is long enough as it is, we'll implement this feature in part 2 of this article.
+</p>
+<p style="margin-top: 1rem; font-size: 1.0625rem;">
+    But in part 1 of this article, you've learned the advantages and drawbacks of using MongoDB for your 
+    data storage needs, and how to implement MongoDB in a C# application. In Part 2, we'll
+    upgrade the app to both create new forecasts and read existing ones. 
 </p>
 
-<!-- Tags: C#,MongoDB -->
+<!-- Tags: C#,MongoDB,JavaScript,HTTP -->
