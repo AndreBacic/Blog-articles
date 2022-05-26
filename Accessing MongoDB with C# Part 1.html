@@ -117,7 +117,10 @@ namespace WebAPIDemoForArticle.DataAccess
 </code>
 <p>
     Speaking of dependency injection, we'll need to add a new dependency to the project's 
-    startup code. In .NET 6.0 or later, you can add a new Singleton dependency in the Program.cs file:
+    startup code. In a large-scale production application we would first define an interface 
+    for data access (perhaps named IMongoDBAccessor or just IDbAccessor), but to make this 
+    example easier to process we'll directly add the class to dependency injection. 
+    In .NET 6.0 or later, you can add a new Singleton dependency in the Program.cs file:
 </p>
 <code>builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
