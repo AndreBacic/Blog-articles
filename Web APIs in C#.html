@@ -113,16 +113,16 @@ public class WeatherForecastController : ControllerBase
 <code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
-    &lt;meta charset="UTF-8"/&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
     &lt;title&gt;Weather Forecast&lt;/title&gt;
     &lt;link rel="stylesheet" href="css/site.css"&gt;
     &lt;script src="js/site.js" defer&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    &lt;main id="main"&gt;
-        &lt;h1&gt;Weather Forecast&lt;/h1&gt;
-        &lt;h2&gt;Five-day Forecast:&lt;/h2&gt;
+    &lt;main id="main" class="main"&gt;
+        &lt;h1 class="title"&gt;Weather Forecast&lt;/h1&gt;
+        &lt;h2 class="title2"&gt;Five-day Forecast:&lt;/h2&gt;
         &lt;!-- JavaScript code will insert forecast data here --&gt;
     &lt;/main&gt;
 &lt;/body&gt;
@@ -131,39 +131,52 @@ public class WeatherForecastController : ControllerBase
     Next, create a folder named css in the wwwroot folder. This is where we'll 
     add a new CSS file called site.css. Add the following code to the site.css file:
 </p>
-<code>*, *:before, *:after {
+<code>*,
+*:before,
+*:after {
     box-sizing: border-box;
 }
-body, html {
+
+body,
+html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     font-family: "Segoe UI", "Ubuntu", sans-serif;
 }
-main {
+
+.main {
     width: 100%;
     min-height: 100%;
-    text-align: center;    
+    padding: 0.25rem 2rem;
+    text-align: center;
 }
-h1 {
+
+.main p {
+    max-width: 40rem;
+    margin: 0 auto;
+    border-bottom: 2px solid #ccc;
+    padding: 1rem 0;
+}
+
+.main p:first-of-type {
+    margin-top: 1rem;
+    border-top: 2px solid #ccc;
+}
+
+.title {
     font-size: 3rem;
     font-weight: 400;
     margin-top: 0;
     margin-bottom: 1rem;
     padding-top: 4rem;
 }
-h2 {
+
+.title2 {
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 1rem;
-}
-p {
-    max-width: 40rem;
-    margin: 0 auto;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 1rem 0;
 }
 </code>
 <p>
