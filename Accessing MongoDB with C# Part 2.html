@@ -1,7 +1,7 @@
 <h1>Accessing MongoDB With C# Part 2: Inserting Data</h1>
 
 <h2>Updating the App to Let Users Add Weather Forecasts to The System</h2>
-<p>
+<p style="display: hidden;">
     - Problem: there are no forecasts in the database
     - Solution: add a new page to the app that displays a form for users to add a new forecast
     - Add page to front end
@@ -10,6 +10,178 @@
     - Add CreateForecast method to MongoDBAccessor
     - Run the app
 </p>
+
+<p>
+    In <a href="">part one of this article</a> we added MongoDB to the C# web API we made in 
+    <a href="">this article</a>, but because the database is empty, we can't see any forecasts in the app. 
+    In this article, we'll add the ability to create new forecasts to the app. We can start by adding a 
+    create.html page with the following code to the wwwroot folder:
+</p>
+<code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Record New Weather Forecast&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/site.css"&gt;
+    &lt;script&gt; src="js/site.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;main class="main"&gt;
+        &lt;h1&gt; class="title"&gt;Record a New Weather Forecast&lt;/h1&gt;
+        &lt;form id="createForcastForm" class="form" action="javascript:void(0)" onsubmit="createForecast().then()"&gt;
+            &lt;label&gt;  class="label" for="temperatureC"&gt;The Predicted Temperature in °C&lt;/label&gt;
+            &lt;input id="temperatureC" class="input" type="number" value="20"&gt;
+            &lt;label&gt;  class="label" for="date"&gt;Date and Time of Occurrence&lt;/label&gt;
+            &lt;input id="date" class="input" type="datetime-local"&gt;
+            &lt;label&gt;  class="label" for="summary"&gt;Summary&lt;/label&gt;
+            &lt;input id="summary" class="input" type="text"&gt;
+            &lt;input type="submit" class="input" value="Create"&gt;
+        &lt;/form&gt;
+        &lt;a&gt; href="index.html"&gt;Back to home&lt;/a&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code>
+<p>
+    This page has a form that lets users enter the data for a forecast. As it is now, a user on the index.html 
+    page has no link to the form, so let's add one to the index.html page:
+</p>
+<code>    &lt;main id="main" class="main"&gt;
+        &lt;h1 class="title"&gt;Weather Forecast&lt;/h1&gt;
+        &lt;h2 class="title2"&gt;Five-day Forecast:&lt;/h2&gt;
+        &lt;!-- JavaScript code will insert forecast data here --&gt;
+        
+        <strong>&lt;a href="create.html"&gt;Record a new forecast&lt;/a&gt;</strong>
+    &lt;/main&gt;
+</code>
+<p>
+    Also, the create.html form needs some extra CSS to be presentable. We can add the following to wwwroot/css/site.css:
+</p>
+<code>.form {
+    max-width: 40rem;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0.5rem;
+}
+
+.label {
+    padding-right: 0.75rem;
+    text-align: right;
+}
+
+.input {
+    width: 100%;
+    border: 2px solid #aaa;
+    background-color: #fff;
+    padding: 0.125rem;
+    font-size: 1rem;
+    font-family: "Segoe UI", "Ubuntu", sans-serif;
+}
+
+.input[type="submit"] {
+    margin: 0 auto;
+    width: 50%;
+    grid-column: 1 / -1;
+}
+
+.input[type="submit"]:hover {
+    border-color: #555;
+    background-color: #999;
+    color: #fff;
+}
+
+@media screen and (max-width: 600px) {
+    .form {
+        grid-template-columns: 1fr;
+        row-gap: 0.125rem;
+    }
+
+    .label {
+        padding-right: 0;
+        text-align: left;
+    }
+
+    .input {
+        margin-bottom: 0.375rem;
+    }
+
+    .input[type="submit"] {
+        margin-top: 0.5rem;
+        width: 90%;
+        grid-column: 1 / 2;
+    }
+}
+</code>
+<p>
+    The grid layout arranges the labels into the left column and their respective inputs to the right, 
+    with the 'Create' button at the bottom spanning both columns. The media query rearranges the form 
+    for smaller screens so that all labels and inputs are stacked into one column.
+</p>
+
+<h2>Adding a POST endpoint to the API and calling it with JavaScript</h2>
+<p>If you run the app now, you'll be able to navigate to the Record New Weather Forecast page, but the 
+    form of course won;t work because we need to add some JavaScript to send the form data to the API 
+    to be added to the database. We'll add the following JavaScript to the beginning of wwwroot/js/site.js:
+</p>
+<code>async function createForecast() {
+    let date = document.getElementById('date').value
+    let temperatureC = document.getElementById('temperatureC').value
+    let summary = document.getElementById('summary').value
+
+    let response = await fetch('/weatherForecast', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            Date: date,
+            TemperatureC: temperatureC,
+            Summary: summary
+        })
+    })
+    if (response.status &lt; 400) { // no error from POSTing form data
+        window.location = "/"
+        return
+    }
+    alert("Error: problem creating forecast")
+}
+
+</code>
+<p style="margin-bottom: 1px;">
+    createForecast scrapes the form data and packages it in the body of a fetch POST call. If response 
+    is successful, the page is refreshed to show the new forecast. If there is an error, an alert informs 
+    the user.
+</p>
+<p>
+    We can add the API endpoint createForecast calls to WeatherForecastController.cs, after the 
+    Get() method:
+</p>
+<code>        [HttpPost]
+        public IActionResult Post(WeatherForecast forecast)
+        {
+            if (forecast is null ||
+                string.IsNullOrWhiteSpace(forecast.Summary))
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity);
+            }
+            _accessor.CreateForecast(forecast);
+            return StatusCode(StatusCodes.Status201Created);
+        }
+</code>
+<p>
+    After ensuring that the forecast is valid, the forecast is added to the database. If the forecast 
+    is invalid, the API responds with an error. Status code error 422 means that the form data from 
+    the client machine couldn't be processed. 
+</p>
+
+<h2>Adding Data to the MongoDB Database</h2>
+<p></p>
+
+<h2>Using the Finished, Working App</h2>
+<p></p>
+
 <!-- TODO: Add picture of C# project -->
 
 <p style="margin-top: 2rem; font-size: 1.0625rem;">
